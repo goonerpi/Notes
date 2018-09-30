@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/photo_item"
+        android:icon="@drawable/ic_sharp_add_photo_alternate_24px"
+        android:title="Изображение"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/coordinates_item"
+        android:icon="@drawable/ic_sharp_add_location_24px"
+        android:title="Координаты"
+        app:showAsAction="ifRoom" />
+</menu>

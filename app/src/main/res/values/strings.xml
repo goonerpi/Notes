@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Notes</string>
+    <string name="head">Заголовок</string>
+    <string name="note_text">Текст заметки</string>
+    <string name="empty_note">Пустая заметка</string>
+    <string name="no_notes">Нет заметок</string>
+    <string name="note_deleted">Заметка удалена</string>
+    <string name="note_saved">Заметка сохранена</string>
+</resources>

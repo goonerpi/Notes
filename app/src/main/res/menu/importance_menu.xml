@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/importance_high"
+        android:title="Высокая" />
+    <item
+        android:id="@+id/importance_medium"
+        android:title="Средняя" />
+    <item
+        android:id="@+id/importance_low"
+        android:title="Низкая" />
+    <item
+        android:id="@+id/importance_default"
+        android:title="Нет важности" />
+</menu>

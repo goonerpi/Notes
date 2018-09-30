@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/NotesListFragment">
+
+    <fragment
+        android:id="@+id/NotesListFragment"
+        android:name="com.coolapps.goonerpi.notes.ui.NotesListFragment"
+        android:label="fragment_list"
+        tools:layout="@layout/fragment_list">
+        <action
+            android:id="@+id/action_NotesListFragment_to_notePreviewFragment"
+            app:destination="@id/notePreviewFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/action_NotesListFragment_to_noteEditFragment"
+            app:destination="@id/noteEditFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+    <fragment
+        android:id="@+id/notePreviewFragment"
+        android:name="com.coolapps.goonerpi.notes.ui.NotePreviewFragment"
+        android:label="NotePreviewFragment"
+        tools:layout="@layout/fragment_note_preview">
+        <action
+            android:id="@+id/action_notePreviewFragment_to_noteEditFragment"
+            app:destination="@id/noteEditFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <argument
+            android:name="id" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/noteEditFragment"
+        android:name="com.coolapps.goonerpi.notes.ui.NoteEditFragment"
+        android:label="NoteEditFragment"
+        tools:layout="@layout/fragment_note_edit" >
+        <argument android:name="id" />
+    </fragment>
+    <action
+        android:id="@+id/action_global_NotesListFragment"
+        app:destination="@id/NotesListFragment"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:exitAnim="@anim/nav_default_exit_anim"
+        app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+        app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+</navigation>
