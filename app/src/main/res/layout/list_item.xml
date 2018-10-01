@@ -4,17 +4,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="140dp"
-    android:layout_marginLeft="4dp"
-    android:layout_marginRight="4dp">
+    android:layout_height="160dp"
+    android:layout_marginLeft="2dp"
+    android:layout_marginRight="2dp">
 
 
     <androidx.cardview.widget.CardView
         android:id="@+id/list_item_card"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="4dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="12dp"
         android:background="@color/colorBackgroundWhite"
         android:clickable="true"
         android:focusable="true"
@@ -53,7 +53,7 @@
                 android:fadingEdge="vertical"
                 android:fontFamily="serif"
                 android:gravity="center_vertical"
-                android:maxLines="4"
+                android:maxLines="5"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"

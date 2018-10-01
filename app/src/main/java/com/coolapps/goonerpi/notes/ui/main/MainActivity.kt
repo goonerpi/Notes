@@ -18,6 +18,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.main_activity)
         setSupportActionBar(my_toolbar)
         navController = Navigation.findNavController(this, R.id.nav_host_fragment)
+        //NavigationUI.setupActionBarWithNavController(this, navController)
+
 
         navController.addOnNavigatedListener { _, destination ->
             if (destination.id == R.id.NotesListFragment)

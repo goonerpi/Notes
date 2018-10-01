@@ -1,10 +1,7 @@
 package com.coolapps.goonerpi.notes.ui
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -15,13 +12,13 @@ import com.coolapps.goonerpi.notes.App
 import com.coolapps.goonerpi.notes.R
 import com.coolapps.goonerpi.notes.data.Note
 import com.coolapps.goonerpi.notes.utilities.Importance
-import com.coolapps.goonerpi.notes.viewmodels.NoteViewModel
-import kotlinx.android.synthetic.main.fragment_note_edit.view.*
-import java.util.*
 import com.coolapps.goonerpi.notes.utilities.hideKeyboard
+import com.coolapps.goonerpi.notes.viewmodels.NoteViewModel
 import com.google.android.material.snackbar.Snackbar
-import org.jetbrains.anko.image
+import kotlinx.android.synthetic.main.fragment_note_edit.view.*
 import org.jetbrains.anko.imageResource
+import org.jetbrains.anko.support.v4.toast
+import java.util.*
 
 
 class NoteEditFragment : Fragment() {
@@ -33,6 +30,7 @@ class NoteEditFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
+        setHasOptionsMenu(true)
         activity?.title = "Редактор"
         viewModel = ViewModelProviders.of(this).get(NoteViewModel::class.java)
         navController = findNavController()
@@ -44,10 +42,13 @@ class NoteEditFragment : Fragment() {
             val note = viewModel.notes.value?.find { it.id == id }
             var importance = note?.importance ?: Importance.DEFAULT
 
+
             with(rootView) {
+                note_edit_deleteButton.isEnabled = false
                 id?.let {
                     note_edit_head.setText(note?.title)
                     note_edit_body.setText(note?.body)
+                    note_edit_deleteButton.isEnabled = true
                     note_edit_importanceButton.imageResource = Importance.DEFAULT.getResource(importance)
                 }
 
@@ -122,14 +123,13 @@ class NoteEditFragment : Fragment() {
                                 note_edit_importanceButton.imageResource = Importance.DEFAULT.getResource(importance)
                                 true
                             }
-
                         }
                     }
                     popupMenu.show()
                 }
             }
-
         })
+
 
 
 
@@ -137,4 +137,17 @@ class NoteEditFragment : Fragment() {
     }
 
 
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater?.inflate(R.menu.edit_fragment_menu, menu)
+        return super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when(item?.itemId){
+            R.id.coordinates_item -> toast("lul")
+            R.id.upload_item -> toast("luul")
+            R.id.photo_item -> toast("luuul")
+        }
+        return super.onOptionsItemSelected(item)
+    }
 }
