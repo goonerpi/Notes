@@ -2,9 +2,7 @@ package com.coolapps.goonerpi.notes.ui
 
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -12,9 +10,12 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.coolapps.goonerpi.notes.R
+import com.coolapps.goonerpi.notes.data.Note
+import com.coolapps.goonerpi.notes.utilities.FileUploader.Companion.uploadToFile
 import com.coolapps.goonerpi.notes.utilities.Importance
 import com.coolapps.goonerpi.notes.viewmodels.NoteViewModel
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.fragment_note_preview.*
 import kotlinx.android.synthetic.main.fragment_note_preview.view.*
 import org.jetbrains.anko.backgroundResource
 
@@ -23,9 +24,11 @@ class NotePreviewFragment : Fragment() {
 
     private lateinit var viewModel: NoteViewModel
     private lateinit var navController: NavController
+    var note: Note? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
+        setHasOptionsMenu(true)
         val rootView = inflater.inflate(R.layout.fragment_note_preview, container, false)
         viewModel = ViewModelProviders.of(this).get(NoteViewModel::class.java)
         navController = findNavController()
@@ -38,8 +41,9 @@ class NotePreviewFragment : Fragment() {
         }
 
         viewModel.notes.observe(this, Observer {
-            val note = viewModel.notes.value?.find { it.id == id }
+            note = viewModel.notes.value?.find { it.id == id }
             val position = viewModel.notes.value?.indexOf(note)
+            val importance = note?.importance ?: Importance.DEFAULT
             with(rootView) {
                 note_preview_head.text = position?.let {
                     viewModel.notes.value?.get(it)?.title
@@ -49,10 +53,10 @@ class NotePreviewFragment : Fragment() {
                 }
 
                 note?.let {
-                    note_preview_divider.backgroundResource = if (note.importance == Importance.DEFAULT)
+                    note_preview_divider.backgroundResource = if (importance == Importance.DEFAULT)
                         R.color.colorBackgroundItem
                     else
-                        note.importance.colorRes
+                        importance.colorRes
                 }
 
 
@@ -74,5 +78,28 @@ class NotePreviewFragment : Fragment() {
         return rootView
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater?.inflate(R.menu.preview_fragment_menu, menu)
+        return super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.upload_item ->
+
+            {
+
+                val filename = note_preview_head.text.toString()
+                val data = listOf(note_preview_head.text.toString(), note_preview_text.text.toString())
+                if (filename == "") {
+                    this.view?.let { Snackbar.make(it, "Заполните заголовок заметки", Snackbar.LENGTH_LONG).show() }
+                } else {
+                    uploadToFile(filename, data)
+                    this.view?.let { Snackbar.make(it, "Заметка сохранена в файл", Snackbar.LENGTH_SHORT).show() }
+                }
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
 }

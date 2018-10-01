@@ -37,10 +37,13 @@ class NoteEditFragment : Fragment() {
 
         val rootView = inflater.inflate(R.layout.fragment_note_edit, container, false)
         val id = arguments?.getString("uuid")
+        var note: Note?
+
 
         viewModel.notes.observe(this, Observer {
-            val note = viewModel.notes.value?.find { it.id == id }
+            note = viewModel.notes.value?.find { it.id == id }
             var importance = note?.importance ?: Importance.DEFAULT
+            val date = note?.date ?: System.currentTimeMillis()
 
 
             with(rootView) {
@@ -65,7 +68,7 @@ class NoteEditFragment : Fragment() {
                                         importance,
                                         "http://i.imgur.com/DvpvklR.png",
                                         "",
-                                        System.currentTimeMillis()))
+                                        date))
                     else
                         if (note != null) {
                             viewModel.update(
@@ -76,7 +79,7 @@ class NoteEditFragment : Fragment() {
                                             importance,
                                             "http://i.imgur.com/DvpvklR.png",
                                             "",
-                                            note.date
+                                            date
                                     )
                             )
                         }
@@ -129,10 +132,6 @@ class NoteEditFragment : Fragment() {
                 }
             }
         })
-
-
-
-
         return rootView
     }
 
@@ -145,9 +144,9 @@ class NoteEditFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId){
             R.id.coordinates_item -> toast("lul")
-            R.id.upload_item -> toast("luul")
             R.id.photo_item -> toast("luuul")
         }
         return super.onOptionsItemSelected(item)
     }
+
 }
