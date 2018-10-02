@@ -13,11 +13,16 @@ import com.coolapps.goonerpi.notes.R
 import com.coolapps.goonerpi.notes.data.Note
 import com.coolapps.goonerpi.notes.utilities.FileUploader.Companion.uploadToFile
 import com.coolapps.goonerpi.notes.utilities.Importance
+import com.coolapps.goonerpi.notes.utilities.insertCircleImage
 import com.coolapps.goonerpi.notes.viewmodels.NoteViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_note_preview.*
 import kotlinx.android.synthetic.main.fragment_note_preview.view.*
 import org.jetbrains.anko.backgroundResource
+import org.jetbrains.anko.noButton
+import org.jetbrains.anko.support.v4.alert
+import org.jetbrains.anko.yesButton
+
 
 class NotePreviewFragment : Fragment() {
 
@@ -51,6 +56,7 @@ class NotePreviewFragment : Fragment() {
                 note_preview_text.text = position?.let {
                     viewModel.notes.value?.get(it)?.body
                 }
+                insertCircleImage(note?.photo, note_preview_photo)
 
                 note?.let {
                     note_preview_divider.backgroundResource = if (importance == Importance.DEFAULT)
@@ -59,22 +65,27 @@ class NotePreviewFragment : Fragment() {
                         importance.colorRes
                 }
 
-
                 val noteId = bundleOf("uuid" to id)
 
                 note_preview_editButton.setOnClickListener {
                     navController.navigate(R.id.action_notePreviewFragment_to_noteEditFragment, noteId)
                 }
                 note_preview_deleteButton.setOnClickListener {
-                    note?.let(viewModel::delete)
-                    navController.navigate(R.id.action_global_NotesListFragment)
-                    Snackbar.make(rootView, getString(R.string.note_deleted), Snackbar.LENGTH_SHORT).show()
+
+                    alert("Удалить?") {
+                        yesButton {
+                            note?.let(viewModel::delete)
+                            navController.navigate(R.id.action_global_NotesListFragment)
+                            Snackbar.make(rootView, getString(R.string.note_deleted), Snackbar.LENGTH_SHORT).show()
+                        }
+                        noButton {}
+                    }.show()
+
+                }
+                note_preview_photo.setOnClickListener {
                 }
             }
-
-
         })
-
         return rootView
     }
 
@@ -85,14 +96,14 @@ class NotePreviewFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
-            R.id.upload_item ->
-
-            {
+            R.id.upload_item -> {
 
                 val filename = note_preview_head.text.toString()
                 val data = listOf(note_preview_head.text.toString(), note_preview_text.text.toString())
                 if (filename == "") {
-                    this.view?.let { Snackbar.make(it, "Заполните заголовок заметки", Snackbar.LENGTH_LONG).show() }
+                    alert("Заполните заголовок заметки"){
+                        yesButton { }
+                    }.show()
                 } else {
                     uploadToFile(filename, data)
                     this.view?.let { Snackbar.make(it, "Заметка сохранена в файл", Snackbar.LENGTH_SHORT).show() }
@@ -101,5 +112,6 @@ class NotePreviewFragment : Fragment() {
         }
         return super.onOptionsItemSelected(item)
     }
+
 
 }

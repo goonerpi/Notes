@@ -1,6 +1,9 @@
 package com.coolapps.goonerpi.notes.adapters
 
-import android.view.*
+import android.view.LayoutInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.core.os.bundleOf
 import androidx.lifecycle.LiveData
@@ -9,9 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.coolapps.goonerpi.notes.App
 import com.coolapps.goonerpi.notes.R
 import com.coolapps.goonerpi.notes.data.NoteShort
-import com.coolapps.goonerpi.notes.utilities.CircleTransformation
+import com.coolapps.goonerpi.notes.utilities.insertCircleImage
 import com.google.android.material.snackbar.Snackbar
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.list_item.view.*
 import org.jetbrains.anko.backgroundResource
 
@@ -35,15 +37,11 @@ class RecyclerViewAdapter(private val notes: LiveData<List<NoteShort>>, private 
             with(itemView) {
                 list_item_head.text = note.title
                 list_item_importance.backgroundResource = note.importance.colorRes
-                if (note.photo == "")
-                    list_item_photo.visibility = View.GONE
-                else {
-                    list_item_photo.visibility = View.VISIBLE
-                    Picasso.get().load(note.photo).transform(CircleTransformation()).error(R.drawable.ic_sharp_add_photo_alternate_24px).into(itemView.list_item_photo)
-                }
+
+                insertCircleImage(note.photo, list_item_photo)
 
                 val noteId = bundleOf("uuid" to note.id)
-                val elevation = 12
+                val elevation = 8
 
                 list_item_card.setOnClickListener { navController.navigate(R.id.action_NotesListFragment_to_notePreviewFragment, noteId) }
                 list_item_card.setOnLongClickListener {
