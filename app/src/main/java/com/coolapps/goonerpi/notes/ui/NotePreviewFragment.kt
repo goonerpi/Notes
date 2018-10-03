@@ -14,12 +14,13 @@ import com.coolapps.goonerpi.notes.data.Note
 import com.coolapps.goonerpi.notes.utilities.FileUploader.Companion.uploadToFile
 import com.coolapps.goonerpi.notes.utilities.Importance
 import com.coolapps.goonerpi.notes.utilities.insertCircleImage
+import com.coolapps.goonerpi.notes.utilities.listeners.OnDeleteNoteClickListener
+import com.coolapps.goonerpi.notes.utilities.listeners.OnFullscreenImageClickListener
 import com.coolapps.goonerpi.notes.viewmodels.NoteViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_note_preview.*
 import kotlinx.android.synthetic.main.fragment_note_preview.view.*
 import org.jetbrains.anko.backgroundResource
-import org.jetbrains.anko.noButton
 import org.jetbrains.anko.support.v4.alert
 import org.jetbrains.anko.yesButton
 
@@ -29,7 +30,7 @@ class NotePreviewFragment : Fragment() {
 
     private lateinit var viewModel: NoteViewModel
     private lateinit var navController: NavController
-    var note: Note? = null
+    lateinit var note: Note
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
@@ -38,7 +39,7 @@ class NotePreviewFragment : Fragment() {
         viewModel = ViewModelProviders.of(this).get(NoteViewModel::class.java)
         navController = findNavController()
         activity?.title = "Просмотр"
-        val id = arguments?.getString("uuid")
+        val id = arguments!!.getString("uuid")
 
         rootView.apply {
             note_preview_head.movementMethod = ScrollingMovementMethod()
@@ -46,44 +47,34 @@ class NotePreviewFragment : Fragment() {
         }
 
         viewModel.notes.observe(this, Observer {
-            note = viewModel.notes.value?.find { it.id == id }
-            val position = viewModel.notes.value?.indexOf(note)
-            val importance = note?.importance ?: Importance.DEFAULT
-            with(rootView) {
-                note_preview_head.text = position?.let {
-                    viewModel.notes.value?.get(it)?.title
-                }
-                note_preview_text.text = position?.let {
-                    viewModel.notes.value?.get(it)?.body
-                }
-                insertCircleImage(note?.photo, note_preview_photo)
+            note = viewModel.notes.value?.first { it.id == id }!!
+            val importance = note.importance
 
-                note?.let {
-                    note_preview_divider.backgroundResource = if (importance == Importance.DEFAULT)
-                        R.color.colorBackgroundItem
-                    else
-                        importance.colorRes
-                }
+            with(rootView) {
+                note_preview_head.text = note.title
+
+                note_preview_text.text = note.body
+
+                insertCircleImage(note.photo, note_preview_photo)
+
+                note_preview_divider.backgroundResource = if (importance == Importance.DEFAULT)
+                    R.color.colorBackgroundItem
+                else
+                    importance.colorRes
+
 
                 val noteId = bundleOf("uuid" to id)
 
                 note_preview_editButton.setOnClickListener {
                     navController.navigate(R.id.action_notePreviewFragment_to_noteEditFragment, noteId)
                 }
-                note_preview_deleteButton.setOnClickListener {
 
-                    alert("Удалить?") {
-                        yesButton {
-                            note?.let(viewModel::delete)
-                            navController.navigate(R.id.action_global_NotesListFragment)
-                            Snackbar.make(rootView, getString(R.string.note_deleted), Snackbar.LENGTH_SHORT).show()
-                        }
-                        noButton {}
-                    }.show()
+                note_preview_deleteButton.setOnClickListener(OnDeleteNoteClickListener(this@NotePreviewFragment,
+                        note.id,
+                        navController
+                ) { viewModel.delete(note.id)  })
 
-                }
-                note_preview_photo.setOnClickListener {
-                }
+                note_preview_photo.setOnClickListener(OnFullscreenImageClickListener(context, note.photo))
             }
         })
         return rootView
@@ -101,7 +92,7 @@ class NotePreviewFragment : Fragment() {
                 val filename = note_preview_head.text.toString()
                 val data = listOf(note_preview_head.text.toString(), note_preview_text.text.toString())
                 if (filename == "") {
-                    alert("Заполните заголовок заметки"){
+                    alert("Заполните заголовок заметки") {
                         yesButton { }
                     }.show()
                 } else {

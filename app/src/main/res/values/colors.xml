@@ -7,6 +7,7 @@
     <color name="colorBackgroundItem">#7f9cb1</color>
     <color name="colorBackgroundWhite">#f5f5f5</color>
     <color name="colorTextMain">#3f5160</color>
+    <color name="colorBlack">#0b0b0b</color>
     <color name="colorImportanceDefault">#f5f5f5</color>
     <color name="colorImportanceLow">#C5E1A5</color>
     <color name="colorImportanceMedium">#FFDE03</color>

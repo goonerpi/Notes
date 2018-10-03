@@ -6,6 +6,7 @@ import com.coolapps.goonerpi.notes.App
 import com.coolapps.goonerpi.notes.data.Note
 import com.coolapps.goonerpi.notes.data.NoteShort
 
+
 class NoteViewModel : ViewModel() {
 
     val repository = App.repository
@@ -21,8 +22,6 @@ class NoteViewModel : ViewModel() {
     fun delete(note: Note) = repository.delete(note)
 
     fun delete(noteId: String) = repository.deleteById(noteId)
-
-
 
 
 }

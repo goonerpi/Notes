@@ -16,12 +16,13 @@ import com.coolapps.goonerpi.notes.data.Note
 import com.coolapps.goonerpi.notes.utilities.Importance
 import com.coolapps.goonerpi.notes.utilities.hideKeyboard
 import com.coolapps.goonerpi.notes.utilities.insertCircleImage
+import com.coolapps.goonerpi.notes.utilities.listeners.OnDeleteNoteClickListener
+import com.coolapps.goonerpi.notes.utilities.listeners.OnFullscreenImageClickListener
 import com.coolapps.goonerpi.notes.viewmodels.NoteViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_note_edit.*
 import kotlinx.android.synthetic.main.fragment_note_edit.view.*
 import org.jetbrains.anko.imageResource
-import org.jetbrains.anko.noButton
 import org.jetbrains.anko.support.v4.alert
 import org.jetbrains.anko.support.v4.toast
 import org.jetbrains.anko.yesButton
@@ -63,6 +64,7 @@ class NoteEditFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
             with(rootView) {
                 note_edit_deleteButton.isEnabled = false
+                note_edit_photo.visibility = View.GONE
                 id?.let {
                     note_edit_head.setText(note?.title)
                     note_edit_body.setText(note?.body)
@@ -76,53 +78,48 @@ class NoteEditFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
                 note_edit_saveButton.setOnClickListener {
                     //val uuid = id ?: UUID.randomUUID().toString()
-                    if (id == null)
-                        viewModel.insert(
-                                Note(
-                                        UUID.randomUUID().toString(),
-                                        note_edit_head.text.toString(),
-                                        note_edit_body.text.toString(),
-                                        importance,
-                                        photo,
-                                        "",
-                                        date))
-                    else
-                        if (note != null) {
-                            viewModel.update(
+                    if (note_edit_head.text.toString().isEmpty())
+                        alert("Заполните заголовок!") {
+                            yesButton { }
+                        }.show()
+                    else {
+                        if (id == null)
+                            viewModel.insert(
                                     Note(
-                                            id,
+                                            UUID.randomUUID().toString(),
                                             note_edit_head.text.toString(),
                                             note_edit_body.text.toString(),
                                             importance,
                                             photo,
                                             "",
-                                            date
-                                    )
-                            )
-                        }
-
-                    hideKeyboard()
-                    navController.navigate(R.id.action_global_NotesListFragment)
-                    Snackbar.make(rootView, getString(R.string.note_saved), Snackbar.LENGTH_SHORT).show()
-
-
-                }
-
-                note_edit_deleteButton.setOnClickListener {
-
-                    alert("Удалить?") {
-                        yesButton {
-                            note?.let(viewModel::delete)
-                            hideKeyboard()
-                            navController.navigate(R.id.action_global_NotesListFragment)
-                            Snackbar.make(rootView, getString(R.string.note_deleted), Snackbar.LENGTH_SHORT).show()
-                        }
-                        noButton {}
-                    }.show()
-
+                                            date))
+                        else
+                            if (note != null) {
+                                viewModel.update(
+                                        Note(
+                                                id,
+                                                note_edit_head.text.toString(),
+                                                note_edit_body.text.toString(),
+                                                importance,
+                                                photo,
+                                                "",
+                                                date
+                                        )
+                                )
+                            }
+                        hideKeyboard()
+                        navController.navigate(R.id.action_global_NotesListFragment)
+                        Snackbar.make(rootView, getString(R.string.note_saved), Snackbar.LENGTH_SHORT).show()
+                    }
 
 
                 }
+
+                note_edit_deleteButton.setOnClickListener(OnDeleteNoteClickListener(this@NoteEditFragment,
+                        note?.id,
+                        navController
+                ) { note?.id?.let { it1 -> viewModel.delete(it1) } }
+                )
                 note_edit_importanceButton.setOnClickListener {
                     val popupMenu = PopupMenu(App.applicationContext(), it)
                     val inflater = popupMenu.menuInflater
@@ -155,6 +152,8 @@ class NoteEditFragment : Fragment(), EasyPermissions.PermissionCallbacks {
                     popupMenu.show()
                 }
             }
+            note_edit_photo.setOnClickListener(context?.let { it1 -> OnFullscreenImageClickListener(it1, note?.photo) })
+
         })
         return rootView
     }
