@@ -17,9 +17,6 @@ import kotlinx.android.synthetic.main.fragment_list.view.*
 
 class NotesListFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = NotesListFragment()
-    }
 
     private lateinit var viewModel: NoteViewModel
     private lateinit var navController: NavController

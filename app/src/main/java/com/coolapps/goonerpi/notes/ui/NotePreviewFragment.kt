@@ -1,5 +1,7 @@
 package com.coolapps.goonerpi.notes.ui
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.view.*
@@ -72,7 +74,7 @@ class NotePreviewFragment : Fragment() {
                 note_preview_deleteButton.setOnClickListener(OnDeleteNoteClickListener(this@NotePreviewFragment,
                         note.id,
                         navController
-                ) { viewModel.delete(note.id)  })
+                ) { viewModel.delete(note.id) })
 
                 note_preview_photo.setOnClickListener(OnFullscreenImageClickListener(context, note.photo))
             }
@@ -87,22 +89,48 @@ class NotePreviewFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
-            R.id.upload_item -> {
-
-                val filename = note_preview_head.text.toString()
-                val data = listOf(note_preview_head.text.toString(), note_preview_text.text.toString())
-                if (filename == "") {
-                    alert("Заполните заголовок заметки") {
-                        yesButton { }
-                    }.show()
-                } else {
-                    uploadToFile(filename, data)
-                    this.view?.let { Snackbar.make(it, "Заметка сохранена в файл", Snackbar.LENGTH_SHORT).show() }
-                }
-            }
+            R.id.upload_item -> uploadNote()
+            R.id.share_item -> shareNote("${note_preview_head.text}\n\n${note_preview_text.text}", note.photo)
         }
         return super.onOptionsItemSelected(item)
     }
 
 
+    private fun uploadNote() {
+        val filename = note_preview_head.text.toString()
+        val data = listOf(note_preview_head.text.toString(), note_preview_text.text.toString())
+        if (filename == "") {
+            alert("Заполните заголовок заметки") {
+                yesButton { }
+            }.show()
+        } else {
+            uploadToFile(filename, data)
+            this.view?.let { Snackbar.make(it, "Заметка сохранена в файл", Snackbar.LENGTH_SHORT).show() }
+        }
+    }
+
+
+    private fun shareNote(message: String, imagePath: String) {
+
+        val imageUri: Uri?
+        val sharingIntent: Intent
+        if (imagePath != "") {
+            imageUri = Uri.parse(imagePath)
+            sharingIntent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, message.trimEnd())
+                putExtra(Intent.EXTRA_STREAM, imageUri)
+                type = "image/*"
+            }
+        } else {
+            sharingIntent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, message.trimEnd())
+                type = "text/plain"
+            }
+        }
+        startActivity(Intent.createChooser(sharingIntent, "Где поделиться заметкой"))
+
+
+    }
 }

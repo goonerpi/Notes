@@ -5,8 +5,6 @@ import java.io.File
 import java.io.PrintWriter
 
 class FileUploader {
-    val LOG_TAG = "File_Uploader"
-
 
     companion object {
         fun uploadToFile(filename: String, data: List<String>) {

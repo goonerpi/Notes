@@ -19,8 +19,6 @@ class NoteViewModel : ViewModel() {
 
     fun update(note: Note) = repository.update(note)
 
-    fun delete(note: Note) = repository.delete(note)
-
     fun delete(noteId: String) = repository.deleteById(noteId)
 
 

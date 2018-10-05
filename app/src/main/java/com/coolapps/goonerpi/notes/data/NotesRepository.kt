@@ -2,14 +2,13 @@ package com.coolapps.goonerpi.notes.data
 
 import androidx.lifecycle.LiveData
 import com.coolapps.goonerpi.notes.App
-import com.coolapps.goonerpi.notes.utilities.runOnIoThread
+import com.coolapps.goonerpi.notes.utilities.runOnBackgroundThread
 
 class NotesRepository {
 
     private val noteDao = AppDatabase.getInstance(App.applicationContext()).noteDao()
-    //val notes: LiveData<List<Note>> = getAll()
 
-    fun insert(note: Note) = runOnIoThread { noteDao.insert(note) }
+    fun insert(note: Note) = runOnBackgroundThread { noteDao.insert(note) }
 
     fun get(noteId: String): LiveData<Note> = noteDao.get(noteId)
 
@@ -19,16 +18,15 @@ class NotesRepository {
 
     fun getAllShort(): LiveData<List<NoteShort>> = noteDao.getAllShort()
 
-    fun update(note: Note) = runOnIoThread { noteDao.update(note) }
+    fun update(note: Note) = runOnBackgroundThread { noteDao.update(note) }
 
-    fun delete(note: Note) = runOnIoThread { noteDao.delete(note) }
+    fun delete(note: Note) = runOnBackgroundThread { noteDao.delete(note) }
 
-    fun deleteById(noteId: String) = runOnIoThread { noteDao.deleteById(noteId) }
+    fun deleteById(noteId: String) = runOnBackgroundThread { noteDao.deleteById(noteId) }
 
 
     companion object {
 
-        // For Singleton instantiation
         @Volatile
         private var instance: NotesRepository? = null
 

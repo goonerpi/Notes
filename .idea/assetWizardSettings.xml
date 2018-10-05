@@ -30,11 +30,24 @@
                                           </PersistentState>
                                         </value>
                                       </entry>
+                                      <entry key="foregroundText">
+                                        <value>
+                                          <PersistentState>
+                                            <option name="values">
+                                              <map>
+                                                <entry key="trimmed" value="true" />
+                                              </map>
+                                            </option>
+                                          </PersistentState>
+                                        </value>
+                                      </entry>
                                     </map>
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="foregroundImage" value="D:\Загрузки\icons8-note-50.png" />
+                                      <entry key="backgroundAssetType" value="COLOR" />
+                                      <entry key="backgroundColor" value="977b81" />
+                                      <entry key="foregroundImage" value="D:\Загрузки\sharp-notes-black-48\2x\sharp_notes_black_48dp.png" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -70,11 +83,6 @@
                             </entry>
                           </map>
                         </option>
-                        <option name="values">
-                          <map>
-                            <entry key="outputIconType" value="LAUNCHER_LEGACY" />
-                          </map>
-                        </option>
                       </PersistentState>
                     </value>
                   </entry>
@@ -94,8 +102,8 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_sharp_error_24px" />
-                            <entry key="sourceFile" value="D:\Загрузки\sharp-error-24px.svg" />
+                            <entry key="outputName" value="ic_sharp_share_24px" />
+                            <entry key="sourceFile" value="D:\Загрузки\sharp-share-24px.svg" />
                           </map>
                         </option>
                       </PersistentState>

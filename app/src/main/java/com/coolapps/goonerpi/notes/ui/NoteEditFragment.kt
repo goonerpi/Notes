@@ -17,7 +17,6 @@ import com.coolapps.goonerpi.notes.utilities.Importance
 import com.coolapps.goonerpi.notes.utilities.hideKeyboard
 import com.coolapps.goonerpi.notes.utilities.insertCircleImage
 import com.coolapps.goonerpi.notes.utilities.listeners.OnDeleteNoteClickListener
-import com.coolapps.goonerpi.notes.utilities.listeners.OnFullscreenImageClickListener
 import com.coolapps.goonerpi.notes.viewmodels.NoteViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_note_edit.*
@@ -77,7 +76,6 @@ class NoteEditFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
 
                 note_edit_saveButton.setOnClickListener {
-                    //val uuid = id ?: UUID.randomUUID().toString()
                     if (note_edit_head.text.toString().isEmpty())
                         alert("Заполните заголовок!") {
                             yesButton { }
@@ -87,8 +85,8 @@ class NoteEditFragment : Fragment(), EasyPermissions.PermissionCallbacks {
                             viewModel.insert(
                                     Note(
                                             UUID.randomUUID().toString(),
-                                            note_edit_head.text.toString(),
-                                            note_edit_body.text.toString(),
+                                            note_edit_head.text.toString().trimEnd(),
+                                            note_edit_body.text.toString().trimEnd(),
                                             importance,
                                             photo,
                                             "",
@@ -98,8 +96,8 @@ class NoteEditFragment : Fragment(), EasyPermissions.PermissionCallbacks {
                                 viewModel.update(
                                         Note(
                                                 id,
-                                                note_edit_head.text.toString(),
-                                                note_edit_body.text.toString(),
+                                                note_edit_head.text.toString().trimEnd(),
+                                                note_edit_body.text.toString().trimEnd(),
                                                 importance,
                                                 photo,
                                                 "",
@@ -152,7 +150,6 @@ class NoteEditFragment : Fragment(), EasyPermissions.PermissionCallbacks {
                     popupMenu.show()
                 }
             }
-            note_edit_photo.setOnClickListener(context?.let { it1 -> OnFullscreenImageClickListener(it1, note?.photo) })
 
         })
         return rootView
@@ -166,7 +163,7 @@ class NoteEditFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
-            R.id.coordinates_item -> toast("ss")
+            R.id.coordinates_item -> toast("Купите премиум версию!")
             R.id.photo_item -> selectImage()
         }
         return super.onOptionsItemSelected(item)
